@@ -2,8 +2,11 @@
 Using Python to build ML model to predict customer churn rate from different factors (Supervised).
 
 ## Context Overview
-One ecommerce company has a project on predicting churned users in order to offer potential
-promotions. 
+In the competitive world of e-commerce, customer retention is a crucial determinant of long-term success. Our company has observed an alarming trend in user behavior: an increasing number of customers are churning—abandoning their carts, failing to complete purchases, and ceasing interactions altogether. To address this challenge, our initiative focuses on predicting churned users and offering strategic promotions to re-engage them. By understanding the factors that lead to churn, we can not only recover lost revenue but also enhance customer relationships and foster loyalty.
+
+Why Use Machine Learning?
+
+Traditional methods of analyzing churn rates, while valuable, often fall short in capturing the complexities of customer behavior. Machine learning offers a powerful alternative, enabling us to uncover hidden patterns and relationships within large datasets. By leveraging predictive algorithms, we can automate the identification of at-risk customers, allowing us to implement timely and targeted engagement strategies. This proactive approach not only enhances our agility in responding to churn signals but also provides a scalable solution that evolves alongside changing customer behaviors.
 
 ## EDA
 After importing the dataset into Google Colab, we will conduct an exploratory data analysis (EDA) to deepen our understanding of the data. This process is likely to yield valuable insights that could enhance the performance of our supervised learning model in subsequent steps.
@@ -12,7 +15,7 @@ Let's ".describe()" the dataset a bit
 
 ![image](https://github.com/user-attachments/assets/127e02ef-cee0-429c-aaa7-b1078856d19a)
 
-Column Analysis
+### Numerical Columns Analysis
 
 CustomerID
 *   Count: 5,630 unique customers.
@@ -99,5 +102,57 @@ The distributions exhibit significant skewness. To confirm this observation, I w
 Then we should impute median instead. To accomplish this imputation, I would use SimpleImputer from sklearn.impute.
 
 ![image](https://github.com/user-attachments/assets/de1d7ff7-cbf0-431e-b388-1450771c07ea)
+### Categorical Columns Analysis
+![image](https://github.com/user-attachments/assets/7bfd6719-ca0a-4fcf-9bb4-e195ca1647b8) ![image](https://github.com/user-attachments/assets/24b9c859-f381-4bd0-ab71-e50b12bf4707)
+
+
+Preferred Login Device:
+- Insights: The majority of customers (49%) prefer to log in using a mobile phone, followed by computers and phones. Note, phone might overlap with mobile phone, which inidcates the domination of phone users.
+- Implications: Churning could be related to the device used for logging in. Understanding this pattern may reveal that mobile users face unique challenges or preferences that lead to higher churn rates. This insight could inform the development of mobile-specific features or improvements to enhance user satisfaction.
+
+Preferred Payment mode:
+- Insights: The majority of customers (41%) prefer to use debit cards for payment, followed by credit cards, e-wallets, and UPI.
+- Implications: Payment preference could indicate customer loyalty and purchase behavior. Understanding which payment methods are associated with high-value transactions can help tailor promotions or offers. Additionally, analyzing churn patterns could uncover whether customers who prefer certain payment methods are more likely to leave, providing an avenue for targeted retention efforts. Besides, payment methods with more churned customers could be targeted for improvements.
+
+Gender
+- Insights: The majority of customers (60%) are male, while 40% are female.
+- Implications: Gender demographics may influence purchasing behaviors and preferences. Insights into gender-related tendencies can help optimize marketing strategies and product recommendations. Furthermore, understanding any churn correlations within gender groups could reveal opportunities for targeted retention campaigns designed to meet the interests of different customer segments.
+Preferred Order Category:
+- Insights: The majority of customers (36%) prefer to order laptops and accessories, followed by mobile phones, fashion products, and mobile-related products.
+- Implications: Product preferences can guide inventory management and targeted marketing campaigns. Recognizing that a significant portion of customers prefers laptops and accessories indicates the necessity to tailor promotions or features towards these products. Analyzing order patterns may also help identify if churn is linked to dissatisfaction with certain product categories.
+Marital Status
+- Insights: The majority of customers (53%) are married, followed by single customers (32%), and divorced customers (15%).
+- Implications: Marital status may impact purchasing behavior and lifecycle stages, such as family-oriented product needs. Understanding these dynamics can lead to personalized marketing strategies and product offerings. It’s also worth examining whether marital status correlates with churn rates to inform retention strategies that address the specific needs of different customer segments.
+### Correlation Analysis
+![image](https://github.com/user-attachments/assets/dbcabdc0-c26f-498b-8454-eb6b98949794)
+
+Strong correlations (> 0.5)
+- CashbackAmount and Tenure (0.467986): There's a moderate positive correlation between the cashback amount and the tenure of a customer. This suggests that customers who have been with the company longer tend to receive more cashback.
+- OrderCount and CouponUsed (0.641178): There's a strong positive correlation between the number of orders and the usage of coupons. This implies that customers who use coupons tend to make more orders. This indicates a good incentive to retain customers.
+Moderate correlations (0.3 to 0.5)
+- HourSpendOnApp and CouponUsed (0.187166): There's a moderate positive correlation between the time spent on the app and the usage of coupons. This suggests that customers who spend more time on the app are more likely to use coupons.
+- DaySinceLastOrder and CashbackAmount (0.316568): There's a moderate positive correlation between the time since the last order and the cashback amount. This implies that customers who have a longer time since their last order tend to receive more cashback. Is this detrimental in a way?
+Weak correlations (< 0.3)
+- WarehouseToHome and HourSpendOnApp (0.064069): There's a weak positive correlation between the warehouse-to-home time and the time spent on the app. This suggests that there's not a strong relationship between these two variables.
+- OrderAmountHikeFromlastYear and CouponUsed (0.024482): There's a weak positive correlation between the order amount hike from last year and the usage of coupons. This implies that there's not a strong relationship between these two variables.
+Insights and potential actions
+- Targeted marketing: Identify customers who have been with the company longer and offer them more cashback opportunities to increase loyalty.
+- Coupon strategy: Analyze the coupon usage pattern and consider offering targeted coupons to customers who are more likely to use them (e.g., those who spend more time on the app).
+- App engagement: Investigate ways to increase engagement on the app, as it's correlated with coupon usage and potentially other desirable behaviors. Gamification for coupon is a good example for this case.
+
+### Checking distribution balance of the Churn column
+
+Balancing an imbalanced distribution in a supervised learning project is crucial for reasons:
+- Model Performance:Bias Toward Majority Class: In imbalanced datasets, models often become biased toward the majority class. For example, if 84% of your data is from class 0 (no churn), the model might predict class 0 for most cases. This can lead to high accuracy but poor performance in identifying the minority class.
+- Underperformance in Minority Class Prediction: The model might completely miss recognizing examples of the minority class, which could be critical in applications (like fraud detection or churn prediction).
+Evaluation Metrics:
+- Misleading Accuracy: With imbalanced classes, accuracy alone is a poor metric. A model could achieve high accuracy by simply predicting the majority class most of the time, neglecting the minority class.
+- Importance of Other Metrics: Metrics such as Precision, Recall, and F1 Score are more informative in imbalanced contexts because they specifically measure the model's ability to predict the minority class correctly.
+
+Real-World Consequences: In many cases, failing to predict minority class instances can have significant consequences. For instance, in a churn prediction scenario, missing a customer who is about to leave could lead to revenue loss.
+
+![image](https://github.com/user-attachments/assets/c344147d-4fd0-4d3e-b936-8ddc0d3f6d8f)
+
+The data distribution is considered balanced when the percentage of value 1 falls between 20% and 40%. Currently, this is not the case, so I'll need to adjust the data accordingly to achieve a more balanced distribution.
 
 
