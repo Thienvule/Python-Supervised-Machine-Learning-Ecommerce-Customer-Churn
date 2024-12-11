@@ -140,19 +140,80 @@ Insights and potential actions
 - Coupon strategy: Analyze the coupon usage pattern and consider offering targeted coupons to customers who are more likely to use them (e.g., those who spend more time on the app).
 - App engagement: Investigate ways to increase engagement on the app, as it's correlated with coupon usage and potentially other desirable behaviors. Gamification for coupon is a good example for this case.
 
-### Checking distribution balance of the Churn column
+## Building supervised machine learning model 
 
-Balancing an imbalanced distribution in a supervised learning project is crucial for reasons:
-- Model Performance:Bias Toward Majority Class: In imbalanced datasets, models often become biased toward the majority class. For example, if 84% of your data is from class 0 (no churn), the model might predict class 0 for most cases. This can lead to high accuracy but poor performance in identifying the minority class.
-- Underperformance in Minority Class Prediction: The model might completely miss recognizing examples of the minority class, which could be critical in applications (like fraud detection or churn prediction).
-Evaluation Metrics:
-- Misleading Accuracy: With imbalanced classes, accuracy alone is a poor metric. A model could achieve high accuracy by simply predicting the majority class most of the time, neglecting the minority class.
-- Importance of Other Metrics: Metrics such as Precision, Recall, and F1 Score are more informative in imbalanced contexts because they specifically measure the model's ability to predict the minority class correctly.
+### Data Preprocessing and Distribution Checking for Supervised Learning
+- In the initial stages of building a supervised learning model, it is essential to follow these steps:
+- Dataset Splitting: Begin by dividing the dataset into training and test sets to ensure that the model can be evaluated properly.
+- Encoding Categorical Variables: Convert categorical columns into numerical values. This is crucial because most machine learning algorithms operate on numerical data.
+- Normalization of Numerical Values: Normalize the numerical columns to bring them onto a similar scale, which can improve model training stability and performance.
+- Handling Imbalanced Distributions: It is critical to address any imbalanced distributions in the dataset, particularly in classification tasks. This can significantly impact:
+- Model Performance: If the model is trained on imbalanced data, it can lead to poor predictions and ultimately result in revenue loss.
+- Analyzing Churn Column Distribution: Specifically check the distribution of the Churn column to understand the balance between classes (e.g., churned vs. non-churned) and take appropriate actions if imbalances are detected.
 
-Real-World Consequences: In many cases, failing to predict minority class instances can have significant consequences. For instance, in a churn prediction scenario, missing a customer who is about to leave could lead to revenue loss.
+#### Data Splitting
 
-![image](https://github.com/user-attachments/assets/c344147d-4fd0-4d3e-b936-8ddc0d3f6d8f)
+![image](https://github.com/user-attachments/assets/b381bcde-ca63-495e-93e7-055553c3b174)
 
-The data distribution is considered balanced when the percentage of value 1 falls between 20% and 40%. Currently, this is not the case, so I'll need to adjust the data accordingly to achieve a more balanced distribution.
+The training and test sets were split such that:
+- Training Set: 80% of the data (4504 samples) with 29 features.
+- Test Set: 20% of the data (1126 samples) with 29 features.
+
+#### Normalizing numerical columns
+
+![image](https://github.com/user-attachments/assets/97e01029-969a-4b90-b5dc-ffe380b96641)
+
+The means are close to zero, indicating a successful normalization process.
+
+#### Handling imbalanced distribution
+
+![image](https://github.com/user-attachments/assets/c573f687-683e-48ee-b2b6-9ebbf01775e4)
+
+
+A data distribution is deemed balanced when the percentage of instances with the value of 1 falls between 20% and 40%. Currently, the distribution does not meet this criterion, so adjustments are necessary to achieve a more balanced dataset. I will employ the SMOTE (Synthetic Minority Over-sampling Technique) method for oversampling, which involves creating duplicate instances of labeled-1 values in the Churn column (our target variable) to reach the desired balance.
+
+![image](https://github.com/user-attachments/assets/f65497ca-7247-490f-b413-0f655739e850)
+
+### Model comparison and selection
+Now, to identify which model to be used in building the supervised learning model using 5-fold cross validation.on.
+Gather and display the results, enabling you to compare how well each model performs on your dataset, especially focusing on handling imbalanced classes effectively.
+
+![image](https://github.com/user-attachments/assets/77bade04-4ba7-4bc2-9702-1ba09cff7451)
+
+In this selection process, I utilize the metric of balanced accuracy instead of the accuracy as the dataset is not balanced as it ensures both classes are fairly represented.
+
+The result presented means that Random Forest Classifier is our go-to model for this dataset. Random Forest Classifier is like a democracy of decision trees. It takes the wisdom of many trees to make better, more accurate predictions. It is powerful for both classification and regression tasks and works well with both small and large datasets.
+
+### Building model - Random Forest Classifier
+
+![image](https://github.com/user-attachments/assets/962865c8-bbcc-41ba-b937-3329f01a4da8)
+
+### Intepretation
+
+#### Accuracy: 0.9671
+This means that the model correctly classified approximately 96.71% of all instances (total predictions) in the test dataset. In this case, the model performed very well overall.
+
+#### Classificiation Report
+For class 0 (non-churned):
+- Precision: Out of all instances labeled as 0 (non-churned) by the model, 96% were actually non-churned. High precision indicates that the model has a low false positive rate.
+- Recall: Of all actual non-churned instances, the model correctly identified 100% of them. This shows that the model captured all non-churned customers without missing any.
+- F1-score: This combines precision and recall into a single metric, and a score of 0.98 is excellent since it indicates a good balance between precision and recall.
+- Support: There were 936 actual instances of class 0 (non-churned).
+
+For class 1 (churned):
+- Precision: Of all instances labeled as 1 (churned), 98% were correct. This indicates very few customers who were not churned were misclassified as churned (low false positive rate).
+- Recall: Of all actual churned instances, the model correctly identified 82%. This is relatively good but indicates that some churned customers were missed (higher false negative rate).
+- F1-score: This score reflects the trade-off between precision and recall for the churned class. While good, it suggests that there is room for improvement (recall could be increased).
+- Support: There were 190 actual instances of class 1 (churned).
+
+#### Confusion Matrix
+The confusion matrix shows:
+- True Negatives (TN): 933 - Correctly predicted non-churned (class 0).
+- False Positives (FP): 3 - Incorrectly predicted as churned (class 1) when they were not (class 0).
+- False Negatives (FN): 34 - Missed churned customers (class 1) predicted as non-churned (class 0).
+- True Positives (TP): 156 - Correctly predicted churned customers (class 1).
+
+
+
 
 
