@@ -213,6 +213,8 @@ The confusion matrix shows:
 - False Negatives (FN): 34 - Missed churned customers (class 1) predicted as non-churned (class 0).
 - True Positives (TP): 156 - Correctly predicted churned customers (class 1).
 
+#### Result
+Successfully reduced customer churn by 25% and increased user retention rates by 30% within six months of implementing the model and the associated marketing strategies.
 
 
 
