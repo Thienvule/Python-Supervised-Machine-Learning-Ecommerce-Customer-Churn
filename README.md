@@ -1,4 +1,4 @@
-# Python| Supervised Machine Learning| Ecommerce | Customer Churn
+# Ecommerce | Customer Churn Supervised Machine Learning| Python 
 Using Python to build ML model to predict customer churn rate from different factors (Supervised).
 
 ## Context Overview
